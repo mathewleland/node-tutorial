@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .container
+    - const myPet = pet.toUpperCase();
+    p Hello there, my name is #{name} and i have a pet named #{myPet}
+    p also this is working!
+    img.puppy(src='http://cdn2-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-8.jpg')
+
+    h2
+      | Welcome
+      em  to the jungle
