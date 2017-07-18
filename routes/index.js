@@ -13,7 +13,11 @@ router.get('/', (req, res) => {
   //or to format all of the queries as json
   // res.json(req.query);
   // res.json(mathew);
-  res.render('hello', {name: 'mathew', pet: req.query.pet || 'stevie'});
+  res.render('hello', {
+    name: 'mathew',
+    pet: req.query.pet || 'stevie',
+    title: 'fuck this shit'
+  });
 });
 
 router.get('/reverse/:words', (req, res) => {
