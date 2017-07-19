@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const storeController = require('../controllers/storeController')
 
 // Do work here
-router.get('/', (req, res) => {
+router.get('/', storeController.homePage);
+
+router.get('/cat', (req, res) => {
   const mathew = {
     name: "mathew",
     age: 29,
@@ -16,7 +19,7 @@ router.get('/', (req, res) => {
   res.render('hello', {
     name: 'mathew',
     pet: req.query.pet || 'stevie',
-    title: 'fuck this shit'
+    title: 'fuck this shit.'
   });
 });
 
