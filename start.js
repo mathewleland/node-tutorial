@@ -12,6 +12,8 @@ mongoose.connection.on('error', (err) => {
 
 // READY?! Let's go!
 
+// import all models here. only have to do it once. as soon as it know about it in the entire application.
+//  uses node concept called "singleton".  once you configure it, you dont have to do it for every model
 
 // Start our app!
 const app = require('./app');
