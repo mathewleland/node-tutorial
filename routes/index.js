@@ -3,8 +3,9 @@ const router = express.Router();
 const storeController = require('../controllers/storeController')
 
 // Do work here
-router.get('/', storeController.matsMiddleware, storeController.homePage);
+router.get('/', storeController.homePage);
 
+//this is just to demo how routing works with express
 router.get('/cat', (req, res) => {
   const mathew = {
     name: "mathew",
