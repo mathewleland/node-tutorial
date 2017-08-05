@@ -5,6 +5,8 @@ const storeController = require('../controllers/storeController')
 // Do work here
 router.get('/', storeController.homePage);
 
+router.get('/add', storeController.addStore);
+
 //this is just to demo how routing works with express
 router.get('/cat', (req, res) => {
   const mathew = {
