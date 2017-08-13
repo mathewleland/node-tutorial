@@ -1,0 +1,17 @@
+//- /*a mixin is sort of like a function, you can pass it some data 
+//- and it will return to you some html to be displayed on the page */
+
+mixin storeForm(store={})
+  p Let's eat at #{store.name}
+  form(action='/add' method='POST' class='card')
+    label(for='name') Name
+    input(type='text' name="name")
+    label(for='description') Description
+    textarea(name="description")
+    - const choices = ['Wifi', 'Open late', 'Family friendly', 'Vegetarian', 'Licensed']
+    ul.tags
+      each choice in choices
+        .tag.tag__choice
+          input(type="checkbox" id=choice value=choice name="tags")
+          label(for='choice') #{choice}
+    input(type='submit' value='Save' class="button")
