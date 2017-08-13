@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 const Store = mongoose.model('Store'); //comes from Store.js model, where it's exported
 
 exports.homePage = (req, res) => {
-  console.log(req.name)
+  console.log(req.name);
+  req.flash('info', 'did you just refresh the page?');
   res.render('index');
 }
 
@@ -27,6 +28,7 @@ exports.createStore = async (req, res) => {
   await store.save();
 
   console.log("that shit was successfully saved, lets go back to the home page");
+  req.flash('success', `flash worked! you just created a store named ${store.name}`);
   res.redirect('/');
   //javascript on its own will not wait to see if it saved, it will just go straight to redirecting you
   // so we could put save on its own line, then chain some then(do this)
