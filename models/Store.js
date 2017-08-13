@@ -7,7 +7,7 @@
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const slugs = require('slugs')
+const slug = require('slugs')
 
 
 //do all data normalization as close to the model as possible.  so like below, our store name is trimmed
@@ -16,7 +16,7 @@ const storeSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: "please enter a store name" //instead of using true, or else there'd be some weird mongodb error message
-  }
+  },
   slug: String,
   description: {
     type: String,
@@ -34,8 +34,8 @@ storeSchema.pre('save', function(next) {
   this.slug = slug(this.name); //this uses the slug library above, then just sets the name to be whatever that output is
   next(); //kind of like middleware.  just says to move along. save doesnt happen until the work inside the function is done
 
-  //TODO make more reseliant so that slugs are unique-22 (no two stores can have same slug!)
-})
+  //TODO make more reseliant so that slugs are unique-212 (no two stores can have same slug!)
+});
 
 //how to make mongo know about this model now?  We go into start.js, and import all models!
 
