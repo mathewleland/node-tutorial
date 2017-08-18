@@ -10,6 +10,9 @@ const Store = mongoose.model('Store'); //comes from Store.js model, where it's e
 exports.homePage = (req, res) => {
   console.log(req.name);
   req.flash('info', 'did you just refresh the page?');
+  req.flash('success', 'this is the success flash');
+  req. flash('error', 'this is the error flash');
+  //these are all from the "locals" in our app.js file we incorporate it around 55.  locals are all the variables available to you in your template
   res.render('index');
 }
 
