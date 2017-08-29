@@ -40,3 +40,8 @@ exports.createStore = async (req, res) => {
   // })
   // in ES8, we can use async await instead
 }
+
+exports.getStores = async (req, res) => {
+  const stores = await Store.find();
+  res.render('stores', {title: "Stores", stores})
+}
