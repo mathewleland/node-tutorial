@@ -1,0 +1,10 @@
+mixin storeCard(store={})
+  .store
+    .store__hero
+      .store__actions
+        button soon
+      img(src="/uploads/${store.photo || https://cdn.pixabay.com/photo/2016/08/11/18/53/clouds-1586540_1280.jpg}")
+      h2.title
+        a(href=`${store.slug}`) #{store.name}
+      .store__details
+        p= store.description.split(' ').slice(0,15).join(' ')
