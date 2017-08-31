@@ -45,3 +45,27 @@ exports.getStores = async (req, res) => {
   const stores = await Store.find();
   res.render('stores', {title: "Stores", stores})
 }
+
+exports.editStore = async (req, res) => {
+  //find the store witht the given id (this can be done with the url params we route with!)
+  const storeID = req.params.id;
+  const store = await Store.findOne({ _id: storeID });
+  // res.json(store);
+  // confirm that the user is the owner of the store
+  // render the edit store form so user can make changes and save to database
+  res.render('editStore', { title: `Edit ${store.name}`, store}); //dont need store: store since in ES6  we can omit duplicates if the name is exactly the same
+}
+
+exports.updateStore = async (req, res) => {
+  //find and update the store
+  //findOneAndUpdate is a mongoDB method that takes 3 params: a query, data, and options
+  const store = await Store.findOneAndUpdate({ _id: req.params.id}, req.body, {
+    new: true, // returns the new store, not the old one; we need updated data to redirect to a specific page
+    runValidators: true, // so someone doesn't take out the description (our schema checks for empty strings only on creation)
+
+  }).exec();
+  //redirect them to the store and tell them it worked
+  req.flash('success', `Successfully updated <strong>${store.name}</strong> <a href='/stores/${store.slug}'>See it here</a>`);
+  res.redirect(`/stores/${store._id}/edit`);
+
+}
