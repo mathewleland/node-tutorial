@@ -22,7 +22,25 @@ const storeSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  tags: [String] //our tags will be an array of strings, and when tags are passed they are put inside the array here
+  tags: [String], //our tags will be an array of strings, and when tags are passed they are put inside the array here
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  location: {
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: [{
+      type: Number,
+      required: 'You must supply coordinates!'
+    }],
+    address: {
+      type: String,
+      required: 'You must supply an address'
+    }
+  }
 });
 
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
