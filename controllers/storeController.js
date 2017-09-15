@@ -59,6 +59,8 @@ exports.editStore = async (req, res) => {
 exports.updateStore = async (req, res) => {
   //find and update the store
   //findOneAndUpdate is a mongoDB method that takes 3 params: a query, data, and options
+  //first set the lcoation data to be a point (mongodb wont use the point attribute after updating anymore by default)
+  req.body.location.type = 'Point';
   const store = await Store.findOneAndUpdate({ _id: req.params.id}, req.body, {
     new: true, // returns the new store, not the old one; we need updated data to redirect to a specific page
     runValidators: true, // so someone doesn't take out the description (our schema checks for empty strings only on creation)
