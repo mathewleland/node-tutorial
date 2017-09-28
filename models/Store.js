@@ -40,7 +40,8 @@ const storeSchema = new mongoose.Schema({
       type: String,
       required: 'You must supply an address'
     }
-  }
+  },
+  photo: String
 });
 
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
