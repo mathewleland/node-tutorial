@@ -3,11 +3,18 @@
 
 mixin storeForm(store={})
   p Let's eat at #{store.name}
-  form(action=`/add/${store._id || ''}` method='POST' class='card')
+  form(action=`/add/${store._id || ''}` method='POST' class='card' enctype="multipart/form-data")
+    pre= h.dump(store)
     label(for='name') Name
     input(type='text' name="name" value=store.name)
     label(for='description') Description
     textarea(name="description")=store.description
+    //- image upload part
+    label(for='photo') Photo
+      input(type='file' name='photo' id='photo' accept='image/gif, image/png, image/jpeg')
+      //- handling what types that it will accept on the client side will stop wrong files from being uploaded before they can even hit upload
+      if store.photo
+        img(src=`/uploads/${store.photo}`, alt=store.name width=200)
     //- address, longitude and lattitude
     label(for='address') Address
     input(type='text', id='address', name='location[address]' value=(store.location && store.location.address))
