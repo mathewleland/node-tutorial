@@ -6,6 +6,22 @@
 
 const mongoose = require('mongoose');
 const Store = mongoose.model('Store'); //comes from Store.js model, where it's exported
+const multer = require('multer'); //multer handles upload requests
+const multerOptions = { //tell it what kinds of files to possibly require
+  storage: multer.memoryStorage(),
+  fileFilter: function(req, file, next) { //next is the callback value in the docs
+    //have to say this is ok or not allowed
+    const isPhoto = file.mimetype.startsWith('image/');
+    if (isPhoto) {
+      next(null, true); //passing next a first value, that means its an error.  passing null and then a value, that means it worked, and the second value is what needs to passed along
+    } else {
+      next({ message: 'that filetype isn\'t allowed, son!'}, false); //makes sure someone doesnt upload a pdf or mp4 or some crazy shit
+    }
+  }
+}
+const jimp = require('jimp');
+const uuid = require('uuid'); //helps make file names unique.  in case kitten.png is taken, this will create uniq identifiers
+
 
 exports.homePage = (req, res) => {
   console.log(req.name);
@@ -19,6 +35,27 @@ exports.homePage = (req, res) => {
 exports.addStore = (req, res) => {
   res.render('editStore', { title:'Add Store' });
 }
+
+exports.upload = multer(multerOptions).single('photo');
+
+exports.resize = async (req, res, next) => {
+  //we dont need to upload a new file every time we edit the store.
+  //first check if there's no new file to resize, if there's not file, dont do anything
+  if (!req.file) {
+    next(); //skip to next middleware, skips down to createstore
+    return;
+  }
+  const extension = req.file.mimetype.split('/')[1];
+  //set it up so that createstore has the info when it stores
+  req.body.photo = `${uuid.v4()}.${extension}`;
+  const photo = await jimp.read(req.file.buffer);
+  await photo.resize(800, jimp.AUTO);
+  await photo.write(`./public/uploads/${req.body.photo}`);
+  //once we have written a photo to the file system, keep going :)
+  //whole point of this is to resize and save to disk. and then just save reference to what photo is called so createStore has path to that spot
+  next();
+
+};
 
 exports.createStore = async (req, res) => {
   const store = await (new Store(req.body)).save();
@@ -40,6 +77,7 @@ exports.createStore = async (req, res) => {
   // })
   // in ES8, we can use async await instead
 }
+
 
 exports.getStores = async (req, res) => {
   const stores = await Store.find();
