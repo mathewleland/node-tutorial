@@ -105,7 +105,16 @@ exports.updateStore = async (req, res) => {
 
   }).exec();
   //redirect them to the store and tell them it worked
-  req.flash('success', `Successfully updated <strong>${store.name}</strong> <a href='/stores/${store.slug}'>See it here</a>`);
+  req.flash('success', `Successfully updated <strong>${store.name}</strong> <a href='/store/${store.slug}'>See it here</a>`);
   res.redirect(`/stores/${store._id}/edit`);
 
+}
+
+exports.getStoreBySlug = async (req, res) => {
+  
+  const store = await Store.findOne({ slug: req.params.slug });
+  //if mongodb doens't fnid anything, its just a query that returns null. so we need to handle that as a 404
+  if(!store) return next();  //next will assume this is a middleware, and pass to the next step => goes to line 72 of app.js, which is the errorHandlers.notFound
+
+  res.render('store', {store, title: store.name });
 }
