@@ -45,12 +45,23 @@ const storeSchema = new mongoose.Schema({
 });
 
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
-storeSchema.pre('save', function(next) {
+storeSchema.pre('save', async function(next) {
   if (!this.isModified('name')) {
     next(); //just skip
     return;
   }
   this.slug = slug(this.name); //this uses the slug library above, then just sets the name to be whatever that output is
+  //need to make sure that there are no duplicates, see if corleones-1, corleones-2 exist. use regex
+  const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');
+  //look for something that starts with the slug and ends in maybe a number. $ means ends with, the ? means optional, i ignores case
+  const storesWithSlug = await this.constructor.find({ slug: slugRegEx });
+  if (storesWithSlug.length) {
+    this.slug = `${this.slug}-${storesWithSlug.length + 1}`;
+  }
+  console.log('stores with slug comes out as ');
+  console.log(storesWithSlug);
+
+
   next(); //kind of like middleware.  just says to move along. save doesnt happen until the work inside the function is done
 
   //TODO make more reseliant so that slugs are unique-212 (no two stores can have same slug!)
