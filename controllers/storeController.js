@@ -120,7 +120,15 @@ exports.getStoreBySlug = async (req, res) => {
 }
 
 exports.getStoresByTag = async (req, res) => {
-  const tags = await Store.getTagsList();
   const tagname = req.params.tag;
-  res.render('tags', {tags: tags, title: 'Tags', tagname});
+  const tagQuery = tagname || { $exists: true };
+  const tagsPromise = Store.getTagsList();
+  const storesPromise = Store.find({ tags: tagQuery});
+
+  //dont await multiple lines, they will run one after the other.  for things that can run at the same time, put them into a Promise.all
+  //use destructuring language to assign to multiple variables in one statement
+  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
+
+  // res.json(stores);
+  res.render('tags', {tags: tags, title: 'Tags', tagname, stores: stores});
 }
