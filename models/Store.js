@@ -67,6 +67,15 @@ storeSchema.pre('save', async function(next) {
   //TODO make more reseliant so that slugs are unique-212 (no two stores can have same slug!)
 });
 
+//put a method on the schema, use name.statics.method
+storeSchema.statics.getTagsList = function() {
+  return this.aggregate([
+    { $unwind: '$tags' }, //$ says this is a field on my document
+    { $group: { _id: '$tags', count: { $sum: 1 } }},
+    { $sort: { count: -1 }} // sort ascending (1) or by descending (-1)
+  ]);
+}
+
 //how to make mongo know about this model now?  We go into start.js, and import all models!
 
 module.exports = mongoose.model('Store', storeSchema);
