@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  .inner
+    form.form(action='/register' method='POST')
+      h2= title
+      label(for='name')
+      input(type='text' name='name' placeholder='Barack Obama')
+      label(for='email') Email
+      input(type='email' name='email' placeholder='barry@wh.gov' )
+      label(for='password') Password
+      input(type='password' name='password' placeholder='drone44')
+      label(for='password-confirm') Confirm Password
+      input(type='password' name='password-confirm' placeholder='drone44')
+      input(type='submit' value='Register now!')
