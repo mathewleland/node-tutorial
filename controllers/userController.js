@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const promisify = require('es6-promisify');
 
 exports.loginForm = (req, res) => {
     res.render('login', {title: 'Log into your account'});
@@ -34,5 +36,18 @@ exports.validateRegister = (req, res, next) => {
          });
     }
     next(); //there were no errors!`
+    
+
+}
+
+//if we have hit the register, it means we have passed the validations
+exports.register = async (req, res, next) => { //gotta pass next because it is middleware, we are just in the middle of creating the user
+  const user = new User( {email: req.body.email, name: req.body.name });
+
+  //we are using an external library that does not use promises,it is callback based.  so we use tha promisify
+  // so instead of doing this: User.register(user, req.body.password, function(err, user) {})
+  const registerWithPromise = promisify(User.register, User);
+  await registerWithPromise(user, req.body.password);
+  next();
 
 }
