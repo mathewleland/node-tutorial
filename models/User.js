@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 mongoose.Promise = global.Promise;
 const md5 = require('md5');
 const validator = require('validator');
-const mongodbErrorHandler = require('mongoose-mongodb-error');
-const passportLocalMongoose = require('password-local-mongoose');
+const mongodbErrorHandler = require('mongoose-mongodb-errors');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
   email: {
@@ -14,7 +14,7 @@ const userSchema = new Schema({
       trim: true,
       validate: [validator.isEmail, 'Invalid Email Address'], //make sure this is proper email, first takes function for proper email address, then the message if it is not
       require: 'Please enter an email addy',
-}
+},
   name: {
       type: String,
       required: 'You need to have a name',
@@ -22,7 +22,7 @@ const userSchema = new Schema({
   }
 });
 
-userSchema.plugin(passportLocalMongoose, {usernameField: 'email'});
+userSchema.plugin(passportLocalMongoose, {usernameField: 'email'}); //gives us a register method to use in our userContorller
 userSchema.plugin(mongodbErrorHandler);
 
 
