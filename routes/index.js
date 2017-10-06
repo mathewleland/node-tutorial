@@ -46,4 +46,8 @@ router.get('/register', userController.registerForm);
 
 router.get('/logout', authController.logout);
 
+router.get('/account', authController.isLoggedIn, userController.account);
+router.post('/account', catchErrors(userController.updateAccount)); //this uses asyng await, so thats why we wrap in catch errors
+
+
 module.exports = router;
