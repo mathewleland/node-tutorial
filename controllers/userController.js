@@ -51,3 +51,23 @@ exports.register = async (req, res, next) => { //gotta pass next because it is m
   next();
 
 }
+
+exports.account = (req, res) => {
+    res.render('account', {title: 'Edit your info with us'});
+}
+
+exports.updateAccount = async (req, res) => {
+    //take all data user gives us and update it.  so make a separate var to hold updates in
+    const updates = {
+        name: req.body.name,
+        email: req.body.email
+    };
+
+    const user = await User.findOneAndUpdate( //3 params: query, updates, options  
+        { _id: req.user._id }, //query; req.user is alwawys available to you
+        { $set: updates }, //updates
+        {new: true, runValidators: true, context: 'query'} //options
+    );
+    req.flash('success', 'Update succesful');
+    res.redirect('/account');
+}
