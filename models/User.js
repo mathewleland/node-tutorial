@@ -22,6 +22,14 @@ const userSchema = new Schema({
   }
 });
 
+userSchema.virtual('gravatar').get(function() {
+  //whatever is returned here is returned for the gravatar
+  // return 'http://shop.wwe.com/on/demandware.static/-/Sites/default/dw29757933/images/slot/landing/superstar-landing/Superstar-Category_Superstar_562x408_theRock.png';
+  const hash = md5(this.email);
+  return `https://gravatar.com/avatar/${hash}?s=200`;
+})
+
+
 userSchema.plugin(passportLocalMongoose, {usernameField: 'email'}); //gives us a register method to use in our userContorller
 userSchema.plugin(mongodbErrorHandler);
 
