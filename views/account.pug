@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .inner
+    h2 Change anything below
+    pre= h.dump(user)
+    form(action='/account' method='POST')
+      label(for='name') Name
+      //- passport gives us req.user, this is then used in teh app.js locals 
+      input(type='text' name='name' value=user.name) 
+      label(for='email') Email
+      input(type='email' name='email' value=user.email)
+      input.button(type='submit' value="update my account")
