@@ -48,6 +48,11 @@ router.get('/logout', authController.logout);
 
 router.get('/account', authController.isLoggedIn, userController.account);
 router.post('/account', catchErrors(userController.updateAccount)); //this uses asyng await, so thats why we wrap in catch errors
-
+router.post('/account/forgot', catchErrors(authController.forgot));
+router.get('/account/reset/:token', catchErrors(authController.reset));
+router.post('/account/reset/:token', 
+            authController.confirmedPasswords, 
+            catchErrors(authController.update)
+);
 
 module.exports = router;
