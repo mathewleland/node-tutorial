@@ -41,7 +41,12 @@ const storeSchema = new mongoose.Schema({
       required: 'You must supply an address'
     }
   },
-  photo: String
+  photo: String,
+  author: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User', // we are going to store just the object, but it's a reference to the user,
+    required: 'You must supply an author'
+  }
 });
 
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
