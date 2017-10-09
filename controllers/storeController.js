@@ -58,6 +58,7 @@ exports.resize = async (req, res, next) => {
 };
 
 exports.createStore = async (req, res) => {
+  req.body.author = req.user._id;
   const store = await (new Store(req.body)).save();
   //what if someone passes us bad data in that req.body? it doesnt matter, in that store.js file,
   // we are using a strict schema and setting our types there, anything else gets thrown away.
@@ -84,13 +85,19 @@ exports.getStores = async (req, res) => {
   res.render('stores', {title: "Stores", stores})
 }
 
+const confirmOwner = (store, user) => {
+  if (!store.author.equals(user._id)) { // have to use equals since store.author is an Object Id, cant use ===
+    throw Error('you must own a store in order to edit it');
+  }
+}
+
 exports.editStore = async (req, res) => {
-  //find the store witht the given id (this can be done with the url params we route with!)
+  //1.find the store witht the given id (this can be done with the url params we route with!)
   const storeID = req.params.id;
   const store = await Store.findOne({ _id: storeID });
-  // res.json(store);
-  // confirm that the user is the owner of the store
-  // render the edit store form so user can make changes and save to database
+  // 2.confirm that the user is the owner of the store
+  confirmOwner(store, req.user); 
+  // 3.render the edit store form so user can make changes and save to database
   res.render('editStore', { title: `Edit ${store.name}`, store}); //dont need store: store since in ES6  we can omit duplicates if the name is exactly the same
 }
 
@@ -112,7 +119,7 @@ exports.updateStore = async (req, res) => {
 
 exports.getStoreBySlug = async (req, res) => {
   
-  const store = await Store.findOne({ slug: req.params.slug });
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author'); //populate method here gives us access to the author document if we h.dump it on the store.pug template
   //if mongodb doens't fnid anything, its just a query that returns null. so we need to handle that as a 404
   if(!store) return next();  //next will assume this is a middleware, and pass to the next step => goes to line 72 of app.js, which is the errorHandlers.notFound
 
