@@ -139,3 +139,22 @@ exports.getStoresByTag = async (req, res) => {
   // res.json(stores);
   res.render('tags', {tags: tags, title: 'Tags', tagname, stores: stores});
 }
+
+exports.searchStores = async (req, res) => {
+  const stores = await Store
+  //first find the stores
+  .find({
+    $text: {
+      $search: req.query.q
+    }
+  }, { // project/add a field
+    score: { $meta: 'textScore' }//a listing with 2 instances of a word outscores 1
+  })
+  //then sort the stores by textscore
+  .sort({
+    score: { $meta: 'textScore'}
+  })
+  //limit to 5 results
+  .limit(5)
+  res.json(stores);
+}
