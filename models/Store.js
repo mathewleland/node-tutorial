@@ -21,7 +21,7 @@ const storeSchema = new mongoose.Schema({
   description: {
     type: String,
     trim: true
-  },
+  }, 
   tags: [String], //our tags will be an array of strings, and when tags are passed they are put inside the array here
   created: {
     type: Date,
@@ -47,6 +47,12 @@ const storeSchema = new mongoose.Schema({
     ref: 'User', // we are going to store just the object, but it's a reference to the user,
     required: 'You must supply an author'
   }
+});
+
+//define our indexes
+storeSchema.index({
+  name: 'text',
+  description: 'text'
 });
 
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
