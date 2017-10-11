@@ -6,6 +6,8 @@ const validator = require('validator');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const passportLocalMongoose = require('passport-local-mongoose');
 
+//maybe think about making an admin identifier in the schema, so that one admin could then edit it.  
+
 const userSchema = new Schema({
   email: {
       type: String,
