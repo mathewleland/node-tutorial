@@ -55,6 +55,8 @@ storeSchema.index({
   description: 'text'
 });
 
+storeSchema.index({ location: '2dsphere'})
+
 //before we save the new store, we wanna presupply a slug for it. but first check if the store's name has been modified
 storeSchema.pre('save', async function(next) {
   if (!this.isModified('name')) {
