@@ -35,9 +35,10 @@ function typeAhead(search) {
         if (res.data.length) {
           const html = searchResultsHTML(res.data);
           searchResults.innerHTML = dompurify.sanitize(html);
+        } else {
+          // nothing came back
+          searchResults.innerHTML = dompurify.sanitize(`<div class='search__result'> No results found for ${this.value} found! </div>`);
         }
-        // nothing came back
-        searchResults.innerHTML = dompurify.sanitize(`<div class='search__result'> No results found for ${this.value} found! </div>`);
       })
       .catch(err => {
         console.error(err);
