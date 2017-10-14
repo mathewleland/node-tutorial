@@ -16,6 +16,7 @@ mongoose.connection.on('error', (err) => {
 //  uses node concept called "singleton".  once you configure it, you dont have to do it for every model
 require('./models/Store');
 require('./models/User');
+require('./models/Review');
 
 // Start our app!
 const app = require('./app');
