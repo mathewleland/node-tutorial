@@ -47,6 +47,10 @@ const storeSchema = new mongoose.Schema({
     ref: 'User', // we are going to store just the object, but it's a reference to the user,
     required: 'You must supply an author'
   }
+
+}, { // this here is really just to be able to h.dump it on the page before loading it.  will work without these
+  toJSON: { virtuals: true},
+  toObject: { virtuals: true }
 });
 
 //define our indexes
@@ -87,7 +91,15 @@ storeSchema.statics.getTagsList = function() {
     { $group: { _id: '$tags', count: { $sum: 1 } }},
     { $sort: { count: -1 }} // sort ascending (1) or by descending (-1)
   ]);
-}
+};
+
+// find reviews where the stores _id property === reviews store property
+storeSchema.virtual('reviews', {
+  //tell it to go to another model and do a quick query
+  ref: 'Review', //what model to link?
+  localField: '_id', // which field on the store?
+  foreignField: 'store' // which field on the review?
+});
 
 //how to make mongo know about this model now?  We go into start.js, and import all models!
 
