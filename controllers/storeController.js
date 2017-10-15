@@ -120,7 +120,7 @@ exports.updateStore = async (req, res) => {
 
 exports.getStoreBySlug = async (req, res) => {
   
-  const store = await Store.findOne({ slug: req.params.slug }).populate('author'); //populate method here gives us access to the author document if we h.dump it on the store.pug template
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author reviews'); //populate method here gives us access to the author document if we h.dump it on the store.pug template
   //if mongodb doens't fnid anything, its just a query that returns null. so we need to handle that as a 404
   if(!store) return next();  //next will assume this is a middleware, and pass to the next step => goes to line 72 of app.js, which is the errorHandlers.notFound
 
