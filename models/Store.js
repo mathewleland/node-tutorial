@@ -93,6 +93,20 @@ storeSchema.statics.getTagsList = function() {
   ]);
 };
 
+storeSchema.statics.getTopStores = function() {
+  return this.aggregate([
+    // look up stores, populate their reviews
+    // cannot access the .virtual reviews, aggregate is a lower level thing, doesnt know about higher level thing like the virtual reviews
+    // for the reviews thing below, mongodb turns Review into reviews.
+    { $lookup: {
+      from: 'reviews', localField: '_id', foreignField: 'store', as: 'anyfieldName'
+    }}
+    // filter for only items with > 2 reviews
+    // add an 'average reviews' field
+    // sort the list by our new field, highest reviews first
+  ]);
+}
+
 // find reviews where the stores _id property === reviews store property
 storeSchema.virtual('reviews', {
   //tell it to go to another model and do a quick query
