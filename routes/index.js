@@ -67,6 +67,8 @@ router.get('/hearts',
 
 router.get('/map', storeController.mapPage);
 
+router.get('/top', catchErrors(storeController.showTopStores));
+
 //API ENDPOINTS
 
 router.get('/api/search', catchErrors(storeController.searchStores));
