@@ -205,6 +205,5 @@ exports.showHearts = async (req, res) => {
 exports.showTopStores = async (req, res) => {
   //when we have complex queries of liek 5 - 7 things going on, we wanna stick that as close to the model as we can
   const stores = await Store.getTopStores();
-  res.json(stores);
-  // res.render('topStores', { stores, title: 'top stores'});
+  res.render('topStores', { stores, title: 'top stores'});
 }
