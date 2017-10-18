@@ -82,8 +82,30 @@ exports.createStore = async (req, res) => {
 
 
 exports.getStores = async (req, res) => {
-  const stores = await Store.find();
-  res.render('stores', {title: "Stores", stores})
+  const page = req.params.page || 1;
+  const limit = 4;
+  const skip = (page * limit) - limit;
+  
+  
+  const storesPromise = Store
+  .find()
+  .skip(skip)
+  .limit(limit)
+  .sort( { created: 'desc' });
+
+  const countPromise = Store.count();
+
+  // THIS IS HOW YOU CAN COMBINE TWO PROMISES INTO ONE AWAIT FUNCTION
+  const [stores, count] = await Promise.all([storesPromise, countPromise]);
+
+  const pages = Math.ceil(count/limit);
+  if (!stores.length && skip) {
+    req.flash('info', `you asked for page ${page}, but that is too far, so I put you on page ${pages}`);
+    res.redirect(`/stores/page/${pages}`);
+  }
+  
+  
+  res.render('stores', {title: "Stores", stores, page, pages, count})
 }
 
 const confirmOwner = (store, user) => {
