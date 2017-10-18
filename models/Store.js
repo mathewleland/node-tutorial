@@ -99,11 +99,18 @@ storeSchema.statics.getTopStores = function() {
     // cannot access the .virtual reviews, aggregate is a lower level thing, doesnt know about higher level thing like the virtual reviews
     // for the reviews thing below, mongodb turns Review into reviews.
     { $lookup: {
-      from: 'reviews', localField: '_id', foreignField: 'store', as: 'anyfieldName'
-    }}
-    // filter for only items with > 2 reviews
-    // add an 'average reviews' field
+      from: 'reviews', localField: '_id', foreignField: 'store', as: 'reviews'
+    }},
+    // filter for only items with > 1 reviews
+    { $match: { 'reviews.1': { $exists: true } }}, //how you access indexes in mongoDB, this is reviews[1]
+    // add an 'average reviews' field, project means to add a field
+    { $addFields: {
+      averageRating: { $avg: '$reviews.rating' }
+    }},
     // sort the list by our new field, highest reviews first
+    { $sort: { averageRating: -1}},
+    //limit it to 5 results
+    { $limit: 5 }
   ]);
 }
 
@@ -115,6 +122,14 @@ storeSchema.virtual('reviews', {
   foreignField: 'store' // which field on the review?
 });
 
+function autopopulate(next) {
+  this.populate('reviews');
+  next();
+}
+
 //how to make mongo know about this model now?  We go into start.js, and import all models!
+
+storeSchema.pre('find', autopopulate); // whenever i query a store, it should autopopulate all reviews for that store
+storeSchema.pre('findOne', autopopulate);
 
 module.exports = mongoose.model('Store', storeSchema);
